@@ -34,7 +34,12 @@ Binary/Pseudo-code → [Phase 1: Skeleton] → Normalized IR → [Phase 2: Skin]
 SK2Decompile/
 ├── Preprocess/        # Data preprocessing and normalization tools
 ├── LLaMA-Factory/     # Supervised Fine-Tuning (SFT) implementation
-├── verl/              # Reinforcement Learning (RL) with compiler-based rewards
+├── verl/              # Reinforcement Learning (RL) with VERL/GRPO
+│   └── SK2DECOMPILE/
+│       ├── data/              # Example RL training data
+│       ├── reward_functions/  # Custom reward functions (4 variants)
+│       ├── scripts/           # Training launch scripts
+│       └── README.md          # Detailed RL documentation
 ├── evaluation/        # Comprehensive evaluation suite
 └── README.md          # This file
 ```
@@ -107,20 +112,32 @@ llamafactory-cli train LLaMA-Factory/SK2DECOMPILE/train/norm2code-example.yaml
 
 ### Phase 2: Reinforcement Learning (RL)
 
-Fine-tune models using compiler-based rewards for improved correctness:
+After SFT, we apply GRPO (Group Relative Policy Optimization) to further align each model with task-specific objectives (Section 3.5 of the paper):
+
+- **Structure Recovery**
+- **Identifier Naming**
+
+Our RL training is based on [VERL](https://github.com/volcengine/verl) v0.4.1 (Sheng et al., 2024).
 
 #### Setup VERL
 ```bash
-cd ../verl
-# Follow installation instructions in verl/README.md
+git clone https://github.com/volcengine/verl.git
+cd verl && git checkout v0.4.1 && pip install -e .
+pip install tree-sitter==0.24.0 tree-sitter-c==0.23.4 openai
 ```
 
 #### Run RL Training
 ```bash
-bash verl/SK2DECOMPILE/train/sk2decompile-rl.sh
+# Structure Recovery RL
+bash verl/SK2DECOMPILE/scripts/run_struct_rl.sh
+
+# Identifier Naming RL (requires embedding server)
+bash verl/SK2DECOMPILE/scripts/run_ident_rl.sh
 ```
 
-**RL Training Data:** `verl/SK2DECOMPILE/data/sk2decompile-rl-examples.parquet`
+See [`verl/SK2DECOMPILE/README.md`](verl/SK2DECOMPILE/README.md) for the full reproduction guide, including how to integrate reward functions into VERL and prepare training data.
+
+**RL Training Data:** `verl/SK2DECOMPILE/data/sk2decompile-rl-examples.jsonl`
 
 ## Evaluation
 ```
