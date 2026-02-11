@@ -41,6 +41,12 @@ SK2Decompile/
 │       ├── scripts/           # Training launch scripts
 │       └── README.md          # Detailed RL documentation
 ├── evaluation/        # Comprehensive evaluation suite
+│   ├── bringupbench/          # BringUpBench evaluation (Section A.6)
+│   │   ├── scripts/           # Pipeline scripts (compile, decompile, evaluate)
+│   │   ├── data/              # Pre-built function maps and inference results
+│   │   ├── reports/           # Evaluation result summaries
+│   │   └── README.md          # Detailed BringUpBench documentation
+│   └── ...                    # HumanEval, MBPP evaluation scripts
 └── README.md          # This file
 ```
 
@@ -197,6 +203,12 @@ python gpt_judge.py --json_file your_json_file_path
                     --opt OPT
                     --api_key your_openai_api_key
 ```
+
+**BringUpBench Evaluation** (Section A.6 of the paper)
+
+We also evaluate on [BringUpBench](https://github.com/toddmaustin/bringup-bench) — 90 self-contained C programs with 505 functions across O0–O3. SK²Decompile achieves **42.3% compilation rate** and **27.0% re-executability rate**, compared to IDA Pro's 23.6% / 21.7%.
+
+See [`evaluation/bringupbench/README.md`](evaluation/bringupbench/README.md) for the full reproduction pipeline, pre-built data, and detailed results.
 
 ## 📊 Results
 
